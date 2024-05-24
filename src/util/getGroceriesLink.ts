@@ -3,6 +3,8 @@ import { Grocery } from '#/types/Grocery';
 
 export type SharedFormat = 'jsonblob'
 
+console.log('APP URL: ', APP_URL);
+
 async function getGroceriesLinkJSONBlob(groceries: Grocery[]): Promise<URL> {
     const res = await fetch('https://jsonblob.com/api/jsonBlob', {
         method: 'POST',
