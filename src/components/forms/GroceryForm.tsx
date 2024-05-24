@@ -7,19 +7,21 @@ import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './Form';
 import { Button } from '../input/Button';
 import { Grocery } from '#/types/Grocery';
+import { Store } from '#/types/Store';
+import makeGroceryPricesList from '#/util/makeGroceryPricesList';
 
 const formSchema = z.object({
     name: z.string().min(1, {
         message: "Name must be at least 1 characters."
     }),
-    prices: z.array(z.number())
+    prices: z.record(z.coerce.number())
 })
 
 export type GroceryFormValues = z.infer<typeof formSchema>
 
 const initialValues: GroceryFormValues = {
     name: '',
-    prices: []
+    prices: {}
 }
 
 type GroceryFormProps = {
@@ -27,18 +29,20 @@ type GroceryFormProps = {
     onAddStoreClick: () => void
     onDelete: (grocery: Grocery) => void
     grocery?: Grocery | null
+    stores: Store[]
 }
 
-export default function GroceryForm( { onSubmit, grocery, onDelete, onAddStoreClick }: GroceryFormProps) {
+export default function GroceryForm( { onSubmit, grocery, stores, onDelete, onAddStoreClick }: GroceryFormProps) {
 
     const form = useForm<GroceryFormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: grocery || initialValues,
-    })
-
-    const pricesFieldArray = useFieldArray({
-        control: form.control,
-        name: 'prices'
+        defaultValues: grocery ? { 
+            ...grocery,
+            prices: makeGroceryPricesList(grocery, stores)
+        } : {
+            ...initialValues,
+            prices: makeGroceryPricesList(null, stores)
+        }
     })
 
     return(
@@ -61,14 +65,14 @@ export default function GroceryForm( { onSubmit, grocery, onDelete, onAddStoreCl
                     )}
                 />
                 <div>
-                    <h2>Prices</h2>
-                    {pricesFieldArray.fields.map((field, index) => (
+                    <h2 className='mb-2'>Prices</h2>
+                    {stores.map((store) => (
                         <FormField
                             control={form.control}
-                            name={`prices.${index}`}
+                            name={`prices.${store.id}`}
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>Price</FormLabel>
+                                    <FormLabel>{store.name}</FormLabel>
                                     <FormControl>
                                         <input {...field} type='number' step='0.01'/>
                                     </FormControl>
@@ -79,7 +83,7 @@ export default function GroceryForm( { onSubmit, grocery, onDelete, onAddStoreCl
                     ))}
                     <Button
                         variant='outline'
-                        className='text-foreground !border-foreground'
+                        className='text-foreground !border-foreground my-2'
                         type='button'
                         onClick={onAddStoreClick}
                     >

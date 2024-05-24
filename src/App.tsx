@@ -6,10 +6,12 @@ import router from './router'
 import useGroceriesStore from './state/groceriesStore';
 import { useEffect } from 'react';
 import getGroceriesFromLink from './util/getGroceriesFromLink';
+import useStoresStore from './state/storesStore';
 
 function App() {
 
   const groceries = useGroceriesStore();
+  const stores = useStoresStore();
 
   const isURLShareable = (url: URL | string): boolean => {
     const _url = new URL(url);
@@ -31,6 +33,7 @@ function App() {
 
   useEffect(() => {
     initGroceries();
+    stores.init();
   }, [])
 
   return (

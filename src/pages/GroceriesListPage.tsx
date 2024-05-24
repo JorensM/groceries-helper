@@ -12,11 +12,14 @@ import { Button } from '#/components/input/Button';
 import useGroceriesStore from '#/state/groceriesStore'
 import { Grocery } from '#/types/Grocery';
 import { DialogClose } from '@radix-ui/react-dialog';
-import StoreForm from '#/components/forms/StoreForm';
+import StoreForm, { StoreFormValues } from '#/components/forms/StoreForm';
+import useStoresStore from '#/state/storesStore';
+import { Store } from '#/types/Store';
 
 export default function GroceriesListPage() {
 
     const groceries = useGroceriesStore();
+    const stores = useStoresStore();
 
     const [selectedGrocery, setSelectedGrocery] = useState<Grocery | null>(null);
     const [isGroceryFormOpen, setIsGroceryFormOpen] = useState<boolean>(false);
@@ -30,7 +33,7 @@ export default function GroceriesListPage() {
         if(!selectedGrocery) {
             groceries.add({
                 ...formValues,
-                prices: formValues.price || 0,
+                prices: formValues.prices,
                 checkedInCalculator: false,
                 amountInCalculator: 0,
                 toBuy: 0,
@@ -55,6 +58,13 @@ export default function GroceriesListPage() {
         setIsGroceryFormOpen(true);
     }
 
+    const handleStoreFormSubmit = (formValues: StoreFormValues) => {
+        stores.add({
+            ...formValues
+        });
+        setIsStoreFormOpen(false);
+    }
+
     return (
         <div className='flex flex-col h-full'>
             <div className='flex justify-between'>
@@ -64,7 +74,9 @@ export default function GroceriesListPage() {
                     onOpenChange={setIsGroceryFormOpen}
                 >
                     <DialogTrigger>
-                        <PlusIcon className='h-6 w-6' />
+                        <PlusIcon className='h-6 w-6' 
+                            onClick={() => setSelectedGrocery(null)}
+                        />
                     </DialogTrigger>
                     <DialogContent>
                         <DialogHeader>
@@ -76,6 +88,7 @@ export default function GroceriesListPage() {
                         </DialogHeader>
                         <GroceryForm
                             grocery={selectedGrocery}
+                            stores={stores.items}
                             onSubmit={onGroceryFormSubmit}
                             onDelete={handleGroceryDelete}
                             onAddStoreClick={() => setIsStoreFormOpen(true)}
@@ -98,6 +111,7 @@ export default function GroceriesListPage() {
                         </DialogHeader>
                         <StoreForm
                             store={selectedStore}
+                            onSubmit={handleStoreFormSubmit}
                         />
                     </DialogContent>
                 </Dialog>
