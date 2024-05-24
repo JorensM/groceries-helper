@@ -71,7 +71,7 @@ export default function GroceriesListPage() {
                 </Dialog>
             </div>
             {groceries.items.length ? 
-                <ul className='flex flex-col gap-2'>
+                <ul className='flex flex-col flex-grow gap-2 overflow-y-auto h-1'>
                     {groceries.items.map(grocery => (
                         <li key={grocery.id}>
                             <Button 
