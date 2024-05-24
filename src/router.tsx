@@ -3,11 +3,12 @@ import CalculatorPage from '#/pages/CalculatorPage';
 import AppLayout from './AppLayout';
 import GroceriesListPage from './pages/GroceriesListPage';
 import ToBuyPage from './pages/ToBuyPage';
+import HomePage from './pages/HomePage';
 
 const routes: RouteObject[] = [
     {
         path: '/',
-        element: <CalculatorPage />
+        element: <HomePage />
     },
     {
         path: '/calculator',
