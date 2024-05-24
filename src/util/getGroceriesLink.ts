@@ -1,3 +1,5 @@
+// Constants
+import { APP_URL } from '#/constants/env';
 import { Grocery } from '#/types/Grocery';
 
 export type SharedFormat = 'jsonblob'
@@ -21,7 +23,7 @@ async function getGroceriesLinkJSONBlob(groceries: Grocery[]): Promise<URL> {
         throw new Error('Could not get JSON Blob link from Location header');
     }
 
-    const fullURL = new URL(import.meta.env.VITE_PUBLIC_APP_URL);
+    const fullURL = new URL(APP_URL);
 
     const sharedFormat: SharedFormat = 'jsonblob'
 
