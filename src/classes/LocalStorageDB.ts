@@ -4,23 +4,25 @@ import { getItemByID, getItemID } from '#/util/lists';
 import DB from './DB';
 import { AbstractCollection } from './DB';
 
+const APP_ID = 'groceries-helper'
+
 class LocalStorageCollection<T extends { id: ID }> extends AbstractCollection<T> {
 
     async getMaxID(): Promise<ID> {
-        const maxID = JSON.parse(localStorage.getItem('todolist-maxid') || '10') + 1;
-        localStorage.setItem('todolist-maxid', maxID);
+        const maxID = JSON.parse(localStorage.getItem(APP_ID + '-maxid') || '10') + 1;
+        localStorage.setItem(APP_ID + '-maxid', maxID);
         return maxID;
     }
 
     async getAll(): Promise<T[]> {
-        const collectionItems = localStorage.getItem('todolist-' + this.id);
+        const collectionItems = localStorage.getItem(APP_ID + '-' + this.id);
         if(!collectionItems) {
-            localStorage.setItem('todolist-' + this.id, '[]');
+            localStorage.setItem(APP_ID + '-' + this.id, '[]');
         }
         return JSON.parse(collectionItems || '[]');
     }
     async setAll(items: T[]): Promise<boolean> {
-        localStorage.setItem('todolist-' + this.id, JSON.stringify(items));
+        localStorage.setItem(APP_ID + '-' + this.id, JSON.stringify(items));
         return true;
     }
     async get(id: ID): Promise<T> {

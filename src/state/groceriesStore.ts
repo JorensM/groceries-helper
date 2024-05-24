@@ -22,7 +22,8 @@ const useGroceriesStore = create<GroceriesStore>((set, get) => ({
         [],
         db.groceries,
         undefined,
-        set
+        set,
+        get
     ),
     addToBuyItems: async (toBuy: { item: Grocery, amount: number }[]) => {
         console.log('adding to buy: ', toBuy);

@@ -19,5 +19,5 @@ export const mainNavigation: NavItem[] = [
     {
         label: 'All groceries',
         path: '/groceries'
-    },
+    }
 ]

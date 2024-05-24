@@ -7,8 +7,12 @@ import { NavItem, mainNavigation } from './constants/navigation';
 // Components
 import { Drawer, DrawerContent, DrawerTrigger } from './components/Drawer';
 import { Button } from './components/input/Button';
+import useGroceriesStore from './state/groceriesStore';
+import getGroceriesLink from './util/getGroceriesLink';
 
 export default function AppLayout() {
+
+    const getGroceries = useGroceriesStore((state) => state.getAll);
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -18,6 +22,17 @@ export default function AppLayout() {
     const onNavItemClick = (navItem: NavItem) => {
         navigate(navItem.path);
         setIsDrawerOpen(false);
+    }
+
+    const onShareLinkClick = async () => {
+        const allGroceries = await getGroceries();
+        if(!allGroceries.length) {
+            alert('Please add some groceries before sharing a link');
+            return;
+        }
+        const url = await getGroceriesLink(allGroceries);
+        navigator.clipboard.writeText(url.href);
+        alert(url.href);
     }
 
     return (
@@ -48,6 +63,15 @@ export default function AppLayout() {
                                 </Button>
                             </li>
                         ))}
+                        <li key='share'>
+                                <Button
+                                    variant='ghost'
+                                    className='hover:bg-background'
+                                    onClick={() => onShareLinkClick()}
+                                >
+                                    Share list
+                                </Button>
+                            </li>
                         </ul>
                     </DrawerContent>
                 </Drawer>
