@@ -24,7 +24,7 @@ async function getGroceriesLinkJSONBlob(groceries: Grocery[]): Promise<URL> {
         throw new Error('Could not get JSON Blob link from Location header');
     }
 
-    const fullURL = new URL(APP_URL);
+    const fullURL = new URL(location.href);
 
     const sharedFormat: SharedFormat = 'jsonblob'
 
