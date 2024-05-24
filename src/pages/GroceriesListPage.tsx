@@ -8,9 +8,6 @@ import { DialogContent, DialogTrigger } from '#/components/Dialog';
 import GroceryForm, { GroceryFormValues } from '#/components/forms/GroceryForm';
 import { Button } from '#/components/input/Button';
 
-// Types
-import { ID } from '#/types/misc';
-
 // State
 import useGroceriesStore from '#/state/groceriesStore'
 import { Grocery } from '#/types/Grocery';

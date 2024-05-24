@@ -1,9 +1,7 @@
 // Core
 import { useState } from 'react';
-import { EllipsisVertical, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-
-// Constants
 import { NavItem, mainNavigation } from './constants/navigation';
 
 // Components
