@@ -21,7 +21,7 @@ export type GroceryFormValues = z.infer<typeof formSchema>
 
 const initialValues: GroceryFormValues = {
     name: '',
-    price: 0
+    price: null
 }
 
 type GroceryFormProps = {
