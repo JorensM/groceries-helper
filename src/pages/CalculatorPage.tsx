@@ -16,8 +16,8 @@ export default function CalculatorPage() {
         })
     }
 
-    const calculateGroceriesTotalPrice = (items: Grocery[]): string => {
-        return items.reduce((n, {amountInCalculator, price}) => n + (amountInCalculator || 0) * price, 0).toFixed(2);
+    const calculateGroceriesTotalPrice = (items: Grocery[]): number => {
+        return items.reduce((n, {amountInCalculator, price}) => n + (amountInCalculator || 0) * price, 0);
     }
 
     const totalPrice = calculateGroceriesTotalPrice(groceries.items);
@@ -34,7 +34,7 @@ export default function CalculatorPage() {
         <div className='flex flex-col h-full'>
             <div className='flex justify-between items-center'>
                 <h1 className='w-fit'>Calculator</h1>
-                <span>Total:&nbsp;<b>{totalPrice}&euro;</b></span>
+                <span>Total:&nbsp;<b>{totalPrice.toFixed(2)}&euro;</b></span>
             </div>
             {groceries.items.length ?
                 <>
@@ -56,7 +56,7 @@ export default function CalculatorPage() {
                             </li>
                         ))}
                     </ul>
-                    {totalPrice !== '0.00' &&
+                    {totalPrice !== 0 &&
                         <Button
                             className='mt-4'
                             onClick={handleSaveToBuyButtonClick}

@@ -21,7 +21,7 @@ export default function ToBuyPage() {
 
         
     const calculateGroceriesTotalPrice = (items: Grocery[]): number => {
-        return items.filter(item => item.checkedInToBuy).reduce((n, {toBuy, price}) => n + (toBuy || 0) * price, 0).toFixed(2);
+        return items.filter(item => item.checkedInToBuy).reduce((n, {toBuy, price}) => n + (toBuy || 0) * price, 0);
     }
         
     const totalPrice = calculateGroceriesTotalPrice(groceriesToBuy);
@@ -42,7 +42,7 @@ export default function ToBuyPage() {
         <div className='flex flex-col h-full'>
             <div className='flex justify-between items-center mb-2'>
                 <h1 className='w-fit'>To Buy</h1>
-                <span>Total:&nbsp;<b>{totalPrice}&euro;</b></span>
+                <span>Total:&nbsp;<b>{totalPrice.toFixed(2)}&euro;</b></span>
             </div>
             {groceriesToBuy.length > 0 ?
                 <ul>
