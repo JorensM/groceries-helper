@@ -27,6 +27,7 @@ h1 {
 }
 
 input {
+  background-color: white;
   color: darkslategray;
   padding: 0.4rem;
   border: 1px solid gray;
