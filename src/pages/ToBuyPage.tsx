@@ -45,7 +45,7 @@ export default function ToBuyPage() {
                 <span>Total:&nbsp;<b>{totalPrice.toFixed(2)}&euro;</b></span>
             </div>
             {groceriesToBuy.length > 0 ?
-                <ul>
+                <ul className='flex-grow overflow-y-auto h-1'>
                     {groceriesToBuy.map(grocery => (
                         <li 
                             key={grocery.id}
@@ -83,7 +83,7 @@ export default function ToBuyPage() {
                     To view this list, please add some groceries in the Calculator page
                 </div>
             }
-            {groceriesToBuy.every(grocery => grocery.checkedInToBuy) &&
+            {groceriesToBuy.length && groceriesToBuy.every(grocery => grocery.checkedInToBuy) ?
                 <Button
                     variant='outline'
                     className='mt-auto mb-1'
@@ -91,7 +91,7 @@ export default function ToBuyPage() {
                 >
                     Clear list
                 </Button>
-            }
+            : null}
         </div>
     )
 }
