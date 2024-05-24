@@ -23,7 +23,7 @@ export default defineConfig(( { mode }) => {
       }
     },
     define: {
-      'APP_URL': env.ENVIRONMENT == 'vercel' ? `https://'${env.VITE_VERCEL_URL}'` : `'${env.APP_URL}'`
+      'APP_URL': env.ENVIRONMENT == 'vercel' ? `'https://${env.VITE_VERCEL_URL}'` : `'${env.APP_URL}'`
     }
   })
 })
