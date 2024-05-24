@@ -1,9 +1,9 @@
 // Core
 import { useState } from 'react';
-import { PlusIcon } from 'lucide-react';
+import { PlusIcon, X } from 'lucide-react';
 
 // Components
-import { Dialog } from '#/components/Dialog';
+import { Dialog, DialogHeader } from '#/components/Dialog';
 import { DialogContent, DialogTrigger } from '#/components/Dialog';
 import GroceryForm, { GroceryFormValues } from '#/components/forms/GroceryForm';
 import { Button } from '#/components/input/Button';
@@ -11,6 +11,7 @@ import { Button } from '#/components/input/Button';
 // State
 import useGroceriesStore from '#/state/groceriesStore'
 import { Grocery } from '#/types/Grocery';
+import { DialogClose } from '@radix-ui/react-dialog';
 
 export default function GroceriesListPage() {
 
@@ -59,6 +60,13 @@ export default function GroceriesListPage() {
                         <PlusIcon className='h-6 w-6' />
                     </DialogTrigger>
                     <DialogContent className='max-w-[95vw]'>
+                        <DialogHeader>
+                            <DialogClose
+                                className='h-fit w-fit ml-auto'
+                            >
+                                <X className='h-6 w-6 text-foreground' />
+                            </DialogClose>
+                        </DialogHeader>
                         <GroceryForm
                             grocery={selectedGrocery}
                             onSubmit={onGroceryFormSubmit}
