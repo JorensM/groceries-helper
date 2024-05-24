@@ -14,14 +14,14 @@ const formSchema = z.object({
     }),
     price: z.coerce.number().min(0.01, {
         message: 'Price must be at least 0.01'
-    })
+    }).optional()
 })
 
 export type GroceryFormValues = z.infer<typeof formSchema>
 
 const initialValues: GroceryFormValues = {
     name: '',
-    price: null
+    price: undefined
 }
 
 type GroceryFormProps = {

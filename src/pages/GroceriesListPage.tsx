@@ -24,6 +24,7 @@ export default function GroceriesListPage() {
         if(!selectedGrocery) {
             groceries.add({
                 ...formValues,
+                price: formValues.price || 0,
                 checkedInCalculator: false,
                 amountInCalculator: 0,
                 toBuy: 0,
