@@ -28,6 +28,7 @@ export default function AppLayout() {
         const allGroceries = await getGroceries();
         if(!allGroceries.length) {
             alert('Please add some groceries before sharing a link');
+            return;
         }
         const url = await getGroceriesLink(allGroceries);
         navigator.clipboard.writeText(url.href);
