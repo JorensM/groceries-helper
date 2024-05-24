@@ -38,7 +38,7 @@ export default function CalculatorPage() {
             </div>
             {groceries.items.length ?
                 <>
-                    <ul>
+                    <ul className='flex-grow overflow-y-auto h-1'>
                         {groceries.items.map(grocery => (
                             <li className='flex items-center w-full justify-between'>
                                 {grocery.name}
