@@ -63,7 +63,7 @@ export default function GroceryForm( { onSubmit, grocery, onDelete }: GroceryFor
                         <FormItem>
                             <FormLabel>Price</FormLabel>
                             <FormControl>
-                                <input {...field} type='number' step='0.1'/>
+                                <input {...field} type='number' step='0.01'/>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
