@@ -9,6 +9,7 @@ import { Checkbox } from '#/components/input/Checkbox';
 
 // State
 import useGroceriesStore from '#/state/groceriesStore'
+import { Button } from '#/components/input/Button';
 
 export default function ToBuyPage() {
 
@@ -18,6 +19,13 @@ export default function ToBuyPage() {
         .filter(grocery => grocery.toBuy > 0)
         .sort((a, b) => (a.checkedInToBuy === b.checkedInToBuy) ? 0 : a.checkedInToBuy ? 1 : -1);
 
+        
+    const calculateGroceriesTotalPrice = (items: Grocery[]): number => {
+        return items.filter(item => item.checkedInToBuy).reduce((n, {toBuy, price}) => n + (toBuy || 0) * price, 0).toFixed(2);
+    }
+        
+    const totalPrice = calculateGroceriesTotalPrice(groceriesToBuy);
+
     const handleGroceryCheckedChange = (grocery: Grocery, checked: boolean) => {
         groceries.update({
             id: grocery.id,
@@ -25,7 +33,10 @@ export default function ToBuyPage() {
         });
     }
 
-    const totalPrice = 5;
+    const handleClearListClick = () => {
+        groceries.clearToBuyList();
+    }
+
 
     return (
         <div className='flex flex-col h-full'>
@@ -71,6 +82,15 @@ export default function ToBuyPage() {
                 <div className='flex flex-grow items-center justify-center text-center text-neutral-400'>
                     To view this list, please add some groceries in the Calculator page
                 </div>
+            }
+            {groceriesToBuy.every(grocery => grocery.checkedInToBuy) &&
+                <Button
+                    variant='outline'
+                    className='mt-auto mb-1'
+                    onClick={handleClearListClick}
+                >
+                    Clear list
+                </Button>
             }
         </div>
     )
