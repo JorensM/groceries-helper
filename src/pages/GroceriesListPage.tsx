@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { PlusIcon, X } from 'lucide-react';
 
 // Components
-import { Dialog, DialogHeader } from '#/components/Dialog';
+import { Dialog, DialogHeader, DialogOverlay } from '#/components/Dialog';
 import { DialogContent, DialogTrigger } from '#/components/Dialog';
 import GroceryForm, { GroceryFormValues } from '#/components/forms/GroceryForm';
 import { Button } from '#/components/input/Button';
@@ -12,6 +12,7 @@ import { Button } from '#/components/input/Button';
 import useGroceriesStore from '#/state/groceriesStore'
 import { Grocery } from '#/types/Grocery';
 import { DialogClose } from '@radix-ui/react-dialog';
+import StoreForm from '#/components/forms/StoreForm';
 
 export default function GroceriesListPage() {
 
@@ -19,12 +20,17 @@ export default function GroceriesListPage() {
 
     const [selectedGrocery, setSelectedGrocery] = useState<Grocery | null>(null);
     const [isGroceryFormOpen, setIsGroceryFormOpen] = useState<boolean>(false);
+    const [selectedStore, setSelectedStore] = useState<Store | null>(null);
+    const [isStoreFormOpen, setIsStoreFormOpen] = useState<boolean>(false);
 
     const onGroceryFormSubmit = (formValues: GroceryFormValues) => {
+
+        // const 
+
         if(!selectedGrocery) {
             groceries.add({
                 ...formValues,
-                price: formValues.price || 0,
+                prices: formValues.price || 0,
                 checkedInCalculator: false,
                 amountInCalculator: 0,
                 toBuy: 0,
@@ -72,6 +78,26 @@ export default function GroceriesListPage() {
                             grocery={selectedGrocery}
                             onSubmit={onGroceryFormSubmit}
                             onDelete={handleGroceryDelete}
+                            onAddStoreClick={() => setIsStoreFormOpen(true)}
+                        />
+                    </DialogContent>
+                </Dialog>
+                {/* Store form dialog */}
+                <Dialog
+                    open={isStoreFormOpen}
+                    onOpenChange={setIsStoreFormOpen}
+                >
+                    <DialogContent>
+                        <DialogOverlay className='hidden' />
+                        <DialogHeader>
+                            <DialogClose
+                                className='h-fit w-fit ml-auto'
+                            >
+                                <X className='h-6 w-6 text-foreground' />
+                            </DialogClose>
+                        </DialogHeader>
+                        <StoreForm
+                            store={selectedStore}
                         />
                     </DialogContent>
                 </Dialog>

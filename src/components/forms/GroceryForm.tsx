@@ -1,6 +1,6 @@
 // Core
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { useFieldArray, useForm } from "react-hook-form"
 import { z } from 'zod';
 
 // Components
@@ -12,29 +12,33 @@ const formSchema = z.object({
     name: z.string().min(1, {
         message: "Name must be at least 1 characters."
     }),
-    price: z.coerce.number().min(0.01, {
-        message: 'Price must be at least 0.01'
-    }).optional()
+    prices: z.array(z.number())
 })
 
 export type GroceryFormValues = z.infer<typeof formSchema>
 
 const initialValues: GroceryFormValues = {
     name: '',
-    price: undefined
+    prices: []
 }
 
 type GroceryFormProps = {
     onSubmit: (formValues: GroceryFormValues) => void
+    onAddStoreClick: () => void
     onDelete: (grocery: Grocery) => void
     grocery?: Grocery | null
 }
 
-export default function GroceryForm( { onSubmit, grocery, onDelete }: GroceryFormProps) {
+export default function GroceryForm( { onSubmit, grocery, onDelete, onAddStoreClick }: GroceryFormProps) {
 
     const form = useForm<GroceryFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: grocery || initialValues,
+    })
+
+    const pricesFieldArray = useFieldArray({
+        control: form.control,
+        name: 'prices'
     })
 
     return(
@@ -56,19 +60,33 @@ export default function GroceryForm( { onSubmit, grocery, onDelete }: GroceryFor
                         </FormItem>
                     )}
                 />
-                <FormField
-                    control={form.control}
-                    name='price'
-                    render={({field}) => (
-                        <FormItem>
-                            <FormLabel>Price</FormLabel>
-                            <FormControl>
-                                <input {...field} type='number' step='0.01'/>
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                <div>
+                    <h2>Prices</h2>
+                    {pricesFieldArray.fields.map((field, index) => (
+                        <FormField
+                            control={form.control}
+                            name={`prices.${index}`}
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>Price</FormLabel>
+                                    <FormControl>
+                                        <input {...field} type='number' step='0.01'/>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    ))}
+                    <Button
+                        variant='outline'
+                        className='text-foreground !border-foreground'
+                        type='button'
+                        onClick={onAddStoreClick}
+                    >
+                        Add store
+                    </Button>
+                </div>
+                
                 <div className='flex justify-between'>
                     {grocery &&
                         <Button

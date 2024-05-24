@@ -3,7 +3,7 @@ import { ID } from './misc'
 export type Grocery = {
     id: ID,
     name: string,
-    price: number,
+    prices: { [storeID: string]: number },
     checkedInCalculator: boolean,
     amountInCalculator: number,
     toBuy: number,
