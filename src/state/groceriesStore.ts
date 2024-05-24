@@ -13,6 +13,7 @@ import createAbstractDataStoreSlice from './abstractDataStore';
 
 type GroceriesStore = AbstractDataStoreSlice<Grocery> & {
     addToBuyItems: (toBuy: { item: Grocery, amount: number }[]) => void
+    clearToBuyList: () => void
     clearCalculatorAmounts: () => void
 };
 
@@ -34,6 +35,16 @@ const useGroceriesStore = create<GroceriesStore>((set, get) => ({
             await get().update({
                 id: item.id,
                 toBuy: (oldItem.toBuy || 0) + amount
+            })
+        }
+    },
+    clearToBuyList: async () => {
+        const items = get().items;
+        for(const item of items) {
+            await get().update({
+                id: item.id,
+                toBuy: 0,
+                checkedInToBuy: false
             })
         }
     },
