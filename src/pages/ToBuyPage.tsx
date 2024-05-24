@@ -40,7 +40,7 @@ export default function ToBuyPage() {
 
     return (
         <div className='flex flex-col h-full'>
-            <div className='flex justify-between items-center mb-2'>
+            <div className='flex justify-between items-end mb-2'>
                 <h1 className='w-fit'>To Buy</h1>
                 <span>Total:&nbsp;<b>{totalPrice.toFixed(2)}&euro;</b></span>
             </div>

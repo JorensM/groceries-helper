@@ -11,8 +11,10 @@ export type AbstractDataStoreSlice<T extends { id: ID }> = {
     items: T[],
     add: (item: ItemCreate<T>) => Promise<void>
     set: (item: T) => Promise<void>
+    setAll: (items: T[]) => Promise<boolean>
     update: (item: ItemUpdate<T>) => Promise<void>
     delete: (item: ItemUpdate<T> | ID) => Promise<void>
+    getAll: () => Promise<T[]>
     /**
      * Initialize the store by fetching data from database
      * @returns 
@@ -25,13 +27,15 @@ export type AbstractDataStoreSlice<T extends { id: ID }> = {
 }
 
 type StateSetter<State> = (setter: (state: State) => Partial<State>) => void
+type StateGetter<State> = () => State
 
 export default function createAbstractDataStoreSlice<T extends { id: ID}>
 (
     initial: T[],
     dbCollection: AbstractCollection<T>,
     onInit: ((items: T[]) => void) | undefined,
-    _set: StateSetter<AbstractDataStoreSlice<T>>
+    _set: StateSetter<AbstractDataStoreSlice<T>>,
+    _get: StateGetter<AbstractDataStoreSlice<T>>
 ): 
 AbstractDataStoreSlice<T>
 {   
@@ -61,6 +65,11 @@ AbstractDataStoreSlice<T>
                     items: newItems
                 }
             });
+        },
+        setAll: async (items: T[]) => {
+            await dbCollection.setAll(items);
+            _set(() => ({items: items}));
+            return true;
         },
         update: async (item: ItemUpdate<T>) => {
             await dbCollection.update(item);
@@ -95,11 +104,14 @@ AbstractDataStoreSlice<T>
                 }
             });
         },
+        getAll: async () => {
+            return _get().items;
+        },
         init: async () => {
 
             const items = await dbCollection.getAll();
             
-            
+            //console.log('items: ', items);
             _set(() => {
                 return {
                     items

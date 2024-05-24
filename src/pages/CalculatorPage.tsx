@@ -40,7 +40,10 @@ export default function CalculatorPage() {
                 <>
                     <ul className='flex-grow overflow-y-auto h-1'>
                         {groceries.items.map(grocery => (
-                            <li className='flex items-center w-full justify-between'>
+                            <li 
+                                className='flex items-center w-full justify-between'
+                                key={grocery.id}
+                            >
                                 {grocery.name}
                                 &nbsp;
                                 -
