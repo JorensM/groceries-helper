@@ -59,7 +59,7 @@ export default function GroceriesListPage() {
                     <DialogTrigger>
                         <PlusIcon className='h-6 w-6' />
                     </DialogTrigger>
-                    <DialogContent className='max-w-[95vw]'>
+                    <DialogContent>
                         <DialogHeader>
                             <DialogClose
                                 className='h-fit w-fit ml-auto'
