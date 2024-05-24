@@ -1,5 +1,4 @@
 // Constants
-import { APP_URL } from '#/constants/env';
 import { Grocery } from '#/types/Grocery';
 
 export type SharedFormat = 'jsonblob'
