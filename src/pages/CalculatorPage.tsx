@@ -16,8 +16,8 @@ export default function CalculatorPage() {
         })
     }
 
-    const calculateGroceriesTotalPrice = (items: Grocery[]): number => {
-        return items.reduce((n, {amountInCalculator, price}) => n + (amountInCalculator || 0) * price, 0);
+    const calculateGroceriesTotalPrice = (items: Grocery[]): string => {
+        return items.reduce((n, {amountInCalculator, price}) => n + (amountInCalculator || 0) * price, 0).toFixed(2);
     }
 
     const totalPrice = calculateGroceriesTotalPrice(groceries.items);
@@ -56,7 +56,7 @@ export default function CalculatorPage() {
                             </li>
                         ))}
                     </ul>
-                    {totalPrice > 0 &&
+                    {totalPrice !== '0.00' &&
                         <Button
                             className='mt-4'
                             onClick={handleSaveToBuyButtonClick}
