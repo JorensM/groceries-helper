@@ -64,8 +64,8 @@ export default function GroceryForm( { onSubmit, grocery, stores, onDelete, onAd
                         </FormItem>
                     )}
                 />
-                <div>
-                    <h2 className='mb-2'>Prices</h2>
+                <div className='flex flex-col gap-2'>
+                    <h2 className='mb-1'>Prices</h2>
                     {stores.map((store) => (
                         <FormField
                             control={form.control}
@@ -83,7 +83,7 @@ export default function GroceryForm( { onSubmit, grocery, stores, onDelete, onAd
                     ))}
                     <Button
                         variant='outline'
-                        className='text-foreground !border-foreground my-2'
+                        className='text-foreground !border-foreground my-2 w-fit'
                         type='button'
                         onClick={onAddStoreClick}
                     >
