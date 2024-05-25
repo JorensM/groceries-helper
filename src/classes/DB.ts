@@ -1,4 +1,5 @@
 import { Grocery } from '#/types/Grocery';
+import { Store } from '#/types/Store';
 import { ID, ItemCreate, ItemUpdate } from '#/types/misc';
 
 export abstract class AbstractCollection<T extends { id: ID }> {
@@ -20,10 +21,13 @@ export abstract class AbstractCollection<T extends { id: ID }> {
 
 export default class DB {
     groceries: AbstractCollection<Grocery>;
+    stores: AbstractCollection<Store>;
 
     constructor(
-        groceriesCollection: AbstractCollection<Grocery>
+        groceriesCollection: AbstractCollection<Grocery>,
+        storesCollection: AbstractCollection<Store>
     ) {
         this.groceries = groceriesCollection;
+        this.stores = storesCollection;
     }
 }

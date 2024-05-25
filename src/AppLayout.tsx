@@ -1,23 +1,39 @@
 // Core
 import { useState } from 'react';
-import { Menu } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+
+// Constants
 import { NavItem, mainNavigation } from './constants/navigation';
 
 // Components
 import { Drawer, DrawerContent, DrawerTrigger } from './components/Drawer';
 import { Button } from './components/input/Button';
+import { Dialog, DialogHeader, DialogOverlay, DialogContent, DialogClose } from '#/components/Dialog';
+import StoreForm, { StoreFormValues } from './components/forms/StoreForm';
+
+// State
 import useGroceriesStore from './state/groceriesStore';
+import useStoresStore from './state/storesStore';
+
+// Util
 import getGroceriesLink from './util/getGroceriesLink';
+
+// Types
+import { Store } from './types/Store';
 
 export default function AppLayout() {
 
     const getGroceries = useGroceriesStore((state) => state.getAll);
+    const stores = useStoresStore();
 
     const location = useLocation();
     const navigate = useNavigate();
 
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+
+    const [selectedStore, setSelectedStore] = useState<Store | null>(null);
+    const [isStoreFormOpen, setIsStoreFormOpen] = useState<boolean>(false);
 
     const onNavItemClick = (navItem: NavItem) => {
         navigate(navItem.path);
@@ -33,6 +49,30 @@ export default function AppLayout() {
         const url = await getGroceriesLink(allGroceries);
         navigator.clipboard.writeText(url.href);
         alert(url.href);
+    }
+
+    const onStoreFormDialogOpen = (store: Store | null) => {
+        setSelectedStore(store);
+        setIsStoreFormOpen(true);
+    }
+
+    const handleStoreFormSubmit = (formValues: StoreFormValues) => {
+        if(!selectedStore) {
+            stores.add({
+                ...formValues
+            });
+        } else {
+            stores.update({
+                id: selectedStore.id,
+                ...formValues
+            })
+        }
+        setIsStoreFormOpen(false);
+    }
+
+    const handleStoreFormDelete = (store: Store) => {
+        stores.delete(store);
+        setIsStoreFormOpen(false);
     }
 
     return (
@@ -77,7 +117,32 @@ export default function AppLayout() {
                 </Drawer>
             </nav>
             <main className='px-2 flex-grow'>
-                <Outlet />
+                <Outlet 
+                    context={{
+                        onStoreFormDialogOpen
+                    }}
+                />
+                {/* Store form dialog */}
+                <Dialog
+                    open={isStoreFormOpen}
+                    onOpenChange={setIsStoreFormOpen}
+                >
+                    <DialogContent>
+                        <DialogOverlay className='hidden' />
+                        <DialogHeader>
+                            <DialogClose
+                                className='h-fit w-fit ml-auto'
+                            >
+                                <X className='h-6 w-6 text-foreground' />
+                            </DialogClose>
+                        </DialogHeader>
+                        <StoreForm
+                            store={selectedStore}
+                            onSubmit={handleStoreFormSubmit}
+                            onDelete={handleStoreFormDelete}
+                        />
+                    </DialogContent>
+                </Dialog>
             </main>
         </>
     )
