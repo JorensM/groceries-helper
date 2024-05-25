@@ -19,6 +19,8 @@ import handleKeyPress from '#/util/handleKeyPress';
 // Types
 import { AppLayoutContext } from '#/types/routes';
 import { Grocery } from '#/types/Grocery';
+import getStoreIDWithLowestPrice from '#/util/getStoreIDWithLowestPrice';
+import clsx from 'clsx';
 
 export default function GroceriesListPage() {
 
@@ -145,7 +147,12 @@ export default function GroceriesListPage() {
                                 {stores.items.map(store => {
                                     return (
                                         <td>
-                                            <div className='flex items-center justify-center'>
+                                            <div 
+                                                className={clsx(
+                                                    'flex items-center justify-center',
+                                                    getStoreIDWithLowestPrice(grocery) == store.id ? 'text-green-400 underline underline-offset-2' : null
+                                                )}
+                                            >
                                                 {grocery.prices[store.id] ? grocery.prices[store.id] + ' €' : '-'}
                                             </div>
                                         </td>

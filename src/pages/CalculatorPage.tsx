@@ -1,3 +1,6 @@
+// Core
+import clsx from 'clsx';
+
 // Components
 import { Button } from '#/components/input/Button';
 import StoreSelect from '#/components/input/StoreSelect';
@@ -5,6 +8,9 @@ import StoreSelect from '#/components/input/StoreSelect';
 // State
 import useGroceriesStore from '#/state/groceriesStore'
 import useStoresStore from '#/state/storesStore';
+
+// Util
+import getStoreIDWithLowestPrice from '#/util/getStoreIDWithLowestPrice';
 
 // Types
 import { Grocery } from '#/types/Grocery';
@@ -117,7 +123,13 @@ export default function CalculatorPage() {
                                     {stores.items.map(store => {
                                         return (
                                             <td>
-                                                <div className='flex items-center justify-center'>
+                                                <div 
+                                                    className={clsx(
+                                                        'flex items-center justify-center',
+                                                        getStoreIDWithLowestPrice(grocery) == store.id ? 'text-green-400 underline underline-offset-2' : null
+                                                    )}
+
+                                                >
                                                     {grocery.prices[store.id] ? grocery.prices[store.id] + ' €' : '-'}
                                                 </div>
                                             </td>
