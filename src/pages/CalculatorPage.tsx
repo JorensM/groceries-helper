@@ -1,4 +1,5 @@
 // Core
+import { useOutletContext } from 'react-router-dom';
 import clsx from 'clsx';
 
 // Components
@@ -11,18 +12,24 @@ import useStoresStore from '#/state/storesStore';
 
 // Util
 import getStoreIDWithLowestPrice from '#/util/getStoreIDWithLowestPrice';
+import filterItemsBySearchTerm from '#/util/filterItemsBySearchTerm';
 
 // Types
 import { Grocery } from '#/types/Grocery';
 import { Store } from '#/types/Store';
 import { ID } from '#/types/misc';
+import { AppLayoutContext } from '#/types/routes';
 
 export default function CalculatorPage() {
 
     const groceries = useGroceriesStore();
     const stores = useStoresStore();
 
+    const outletContext = useOutletContext<AppLayoutContext>();
+
     // const [selectedStores, setSelectedStores] = useState<{[groceryID: string]: number}>()
+
+    const filteredGroceries = filterItemsBySearchTerm(groceries.items, outletContext.searchValue);
 
     const handleGroceriesAmountChange = (grocery: Grocery, newAmount: number) => {
         groceries.update({
@@ -105,7 +112,7 @@ export default function CalculatorPage() {
                         </thead>
                         <tbody>
 
-                            {groceries.items.map(grocery => (
+                            {filteredGroceries.map(grocery => (
                                 <tr 
                                     key={grocery.id}
                                 >
