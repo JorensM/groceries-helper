@@ -6,7 +6,6 @@ import db from '#/classes/usedDB';
 
 // Types
 import { AbstractDataStoreSlice } from './abstractDataStore';
-import { Grocery } from '#/types/Grocery';
 
 // State
 import createAbstractDataStoreSlice from './abstractDataStore';
