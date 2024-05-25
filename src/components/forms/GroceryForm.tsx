@@ -1,6 +1,6 @@
 // Core
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useFieldArray, useForm } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { z } from 'zod';
 
 // Components
@@ -38,10 +38,10 @@ export default function GroceryForm( { onSubmit, grocery, stores, onDelete, onAd
         resolver: zodResolver(formSchema),
         defaultValues: grocery ? { 
             ...grocery,
-            prices: makeGroceryPricesList(grocery, stores)
+            prices: makeGroceryPricesList(grocery, stores, false) as Record<string, number | undefined>
         } : {
             ...initialValues,
-            prices: makeGroceryPricesList(null, stores)
+            prices: makeGroceryPricesList(null, stores, false) as Record<string, number | undefined>
         }
     })
 
