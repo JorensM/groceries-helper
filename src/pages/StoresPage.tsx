@@ -22,7 +22,17 @@ export default function StoresPage() {
             <h1>Stores</h1>
             <ButtonList
                 items={stores.items}
-                render={(item: Store) => item.name}
+                render={(item: Store) => (
+                    <span className='flex items-center gap-4'>
+                        <div
+                            className='h-6 w-6 rounded-full'
+                            style={{
+                                backgroundColor: item.color
+                            }}
+                        ></div>
+                        <span>{item.name}</span>
+                    </span>
+                )}
                 onItemClick={(item: Store) => outletContext.onStoreFormDialogOpen(item)}
                 keyExtractor={(item: Store) => item.id}
             />

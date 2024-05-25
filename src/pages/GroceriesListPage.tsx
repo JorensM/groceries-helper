@@ -1,22 +1,24 @@
 // Core
+import { useOutletContext } from 'react-router-dom';
 import { useState } from 'react';
 import { PlusIcon, X } from 'lucide-react';
+import { DialogClose } from '@radix-ui/react-dialog';
 
 // Components
-import { Dialog, DialogHeader, DialogOverlay } from '#/components/Dialog';
+import { Dialog, DialogHeader } from '#/components/Dialog';
 import { DialogContent, DialogTrigger } from '#/components/Dialog';
 import GroceryForm, { GroceryFormValues } from '#/components/forms/GroceryForm';
-import { Button } from '#/components/input/Button';
 
 // State
 import useGroceriesStore from '#/state/groceriesStore'
-import { Grocery } from '#/types/Grocery';
-import { DialogClose } from '@radix-ui/react-dialog';
-import StoreForm, { StoreFormValues } from '#/components/forms/StoreForm';
 import useStoresStore from '#/state/storesStore';
-import { Store } from '#/types/Store';
-import { useOutletContext } from 'react-router-dom';
+
+// Util
+import handleKeyPress from '#/util/handleKeyPress';
+
+// Types
 import { AppLayoutContext } from '#/types/routes';
+import { Grocery } from '#/types/Grocery';
 
 export default function GroceriesListPage() {
 
@@ -39,7 +41,7 @@ export default function GroceriesListPage() {
                 checkedInCalculator: false,
                 amountInCalculator: 0,
                 toBuy: 0,
-                checkedInToBuy: false
+                checkedInToBuy: false,
             });
         } else {
             groceries.update({
@@ -95,24 +97,82 @@ export default function GroceriesListPage() {
                 
             </div>
             {groceries.items.length ? 
-                <ul className='flex flex-col flex-grow gap-2 overflow-y-auto h-1'>
-                    {groceries.items.map(grocery => (
-                        <li key={grocery.id}>
-                            <Button 
-                                variant='ghost'
+                <table className='overflow-y-auto table-auto'>
+                    <thead>
+                        <tr>
+                            <th rowSpan={2}>Item</th>
+                            {/* <div> */}
+                                {/* <div> */}
+                                    {/* Stores */}
+                                {/* </div> */}
+                                {/* <th>1</th> */}
+                                {/* <th>1</th> */}
+                                {/* <th>1</th> */}
+                            {/* </div> */}
+                            <th rowSpan={1} colSpan={stores.items.length}>Prices</th>
+                        </tr>
+                        <tr className='h-6'>
+                                {stores.items.map((store) => (
+                                    <th style={{backgroundColor: store.color}}>
+                                        <span className='hidden sm:inline'>
+                                            {store.name}
+                                        </span>
+                                    </th>
+                                ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {groceries.items.map(grocery => (
+                            <tr 
+                                key={grocery.id}
+                                className='cursor-pointer hover:bg-neutral-700'
                                 onClick={() => handleGrocerySelect(grocery)}
-                                className='w-full flex justify-between'
+                                onKeyUp={(e) => handleKeyPress(e, ['Enter'], () => handleGrocerySelect(grocery))}
+                                tabIndex={0}
                             >
-                                <span>
-                                    {grocery.name}
-                                </span>
-                                <span>
-                                    {grocery.price} &euro;
-                                </span>
-                            </Button>
-                        </li>
-                    ))}
-                </ul>
+                                <div className='py-2'>
+                                    <td className='pl-2'>
+                                        <span>
+                                            {grocery.name}
+                                            {/* &nbsp; */}
+                                            {/* - */}
+                                            {/* &nbsp; */}
+                                            {/* {grocery.price} &euro; */}
+                                        </span>
+                                    </td>
+                                </div>
+                                {stores.items.map(store => {
+                                    return (
+                                        <td>
+                                            <div className='flex items-center justify-center'>
+                                                {grocery.prices[store.id] ? grocery.prices[store.id] + ' €' : '-'}
+                                            </div>
+                                        </td>
+                                    )
+                                })}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                // <ul className='flex flex-col flex-grow gap-2 overflow-y-auto h-1'>
+                //     {groceries.items.map(grocery => (
+                //         <li key={grocery.id}>
+                //             <Button 
+                //                 variant='ghost'
+                //                 onClick={() => handleGrocerySelect(grocery)}
+                //                 className='w-full flex justify-between'
+                //             >
+                //                 <span>
+                //                     {grocery.name}
+                //                 </span>
+                //                 <span>
+                //                     {grocery.price} &euro;
+                //                 </span>
+                //             </Button>
+                //         </li>
+                //     ))}
+                // </ul>
             :
                 <div className='flex flex-grow items-center justify-center text-center text-neutral-400'>
                     Add your first grocery by clicking/tapping on the plus icon

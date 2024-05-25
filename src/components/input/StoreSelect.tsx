@@ -2,29 +2,41 @@ import { Store } from '#/types/Store';
 import { SelectIcon, SelectProps } from '@radix-ui/react-select';
 import { Select, SelectTrigger, SelectContent, SelectItem } from './Select';
 import { useState } from 'react';
+import { ID } from '#/types/misc';
 
-type StoreSelectProps = SelectProps & {
-    stores: Store[]
+type StoreSelectProps = {
+    stores: Store[],
+    onChange: (storeID: ID) => void,
+    value: ID | undefined
 }
 
-export default function StoreSelect( { stores, onValueChange }: StoreSelectProps) {
+export default function StoreSelect( { stores, value, onChange }: StoreSelectProps) {
 
-    const [value, setValue] = useState<number | undefined>(undefined);
+    // const [value, setValue] = useState<number | undefined>(undefined);
 
+    const handleChange = (newValue: string) => {
+        const parsedValue = parseInt(newValue);
+        // setValue(parsedValue);
+        onChange(parsedValue);
+    }
+    
     return (
         <Select
             value={value?.toString()}
-            onValueChange={(value) => setValue(parseInt(value))}
+            onValueChange={handleChange}
         >
             <SelectTrigger
                 className='!w-6 !h-6 !p-0 !rounded-full'
                 style={{
-                    backgroundColor: stores.find(store => store.id.toString() == value)?.color || 'transparent'
+                    backgroundColor: stores.find(store => store.id.toString() == value?.toString())?.color || 'transparent'
                 }}
                 showIcon={false}
             >
             </SelectTrigger>
             <SelectContent className='bg-background text-foreground'>
+                <SelectItem value={undefined}>
+                    None
+                </SelectItem>
                 {stores.map(store => (
                     <SelectItem
                         value={store.id.toString()}
