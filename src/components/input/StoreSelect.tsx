@@ -1,7 +1,5 @@
 import { Store } from '#/types/Store';
-import { SelectIcon, SelectProps } from '@radix-ui/react-select';
 import { Select, SelectTrigger, SelectContent, SelectItem } from './Select';
-import { useState } from 'react';
 import { ID } from '#/types/misc';
 
 type StoreSelectProps = {
@@ -34,6 +32,7 @@ export default function StoreSelect( { stores, value, onChange }: StoreSelectPro
             >
             </SelectTrigger>
             <SelectContent className='bg-background text-foreground'>
+                {/* @ts-expect-error need to have a 'none selected' item */}
                 <SelectItem value={undefined}>
                     None
                 </SelectItem>
