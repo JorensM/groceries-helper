@@ -4,6 +4,7 @@ import AppLayout from './AppLayout';
 import GroceriesListPage from './pages/GroceriesListPage';
 import ToBuyPage from './pages/ToBuyPage';
 import HomePage from './pages/HomePage';
+import StoresPage from './pages/StoresPage';
 
 const routes: RouteObject[] = [
     {
@@ -21,6 +22,10 @@ const routes: RouteObject[] = [
     {
         path: '/to-buy',
         element: <ToBuyPage />
+    },
+    {
+        path: '/stores',
+        element: <StoresPage />
     }
 ]
 

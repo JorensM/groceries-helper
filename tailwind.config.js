@@ -11,7 +11,8 @@ export default {
         'foreground': '#111827',
         'destructive': '#ef4444',
         'primary': '#10b981',
-        'accent': '#083344'
+        'accent': '#083344',
+        'accent-foreground': '#FAF9F6'
       }
     },
   },

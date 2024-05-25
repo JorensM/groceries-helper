@@ -1,4 +1,5 @@
 import { Grocery } from '#/types/Grocery';
+import { Store } from '#/types/Store';
 import { ID, ItemCreate, ItemUpdate } from '#/types/misc';
 import { getItemByID, getItemID } from '#/util/lists';
 import DB from './DB';
@@ -75,6 +76,7 @@ class LocalStorageCollection<T extends { id: ID }> extends AbstractCollection<T>
 
 const localStorageDB = new DB(
     new LocalStorageCollection<Grocery>('groceries'),
+    new LocalStorageCollection<Store>('stores')
 )
 
 export default localStorageDB;

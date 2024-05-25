@@ -12,7 +12,7 @@ import { Grocery } from '#/types/Grocery';
 import createAbstractDataStoreSlice from './abstractDataStore';
 
 type GroceriesStore = AbstractDataStoreSlice<Grocery> & {
-    addToBuyItems: (toBuy: { item: Grocery, amount: number }[]) => void
+    addToBuyItems: (toBuy: { item: Grocery, amount: number, price: number, store: number }[]) => void
     clearToBuyList: () => void
     clearCalculatorAmounts: () => void
 };
@@ -25,16 +25,18 @@ const useGroceriesStore = create<GroceriesStore>((set, get) => ({
         set,
         get
     ),
-    addToBuyItems: async (toBuy: { item: Grocery, amount: number }[]) => {
+    addToBuyItems: async (toBuy: { item: Grocery, amount: number, price: number, store: number }[]) => {
         console.log('adding to buy: ', toBuy);
-        for(const {item, amount} of toBuy) {
+        for(const {item, amount, price, store} of toBuy) {
             const oldItem = get().items.find(_item => _item.id == item.id);
             if(!oldItem) {
                 throw new Error('Could not find item by ID ' + item.id);
             }
             await get().update({
                 id: item.id,
-                toBuy: (oldItem.toBuy || 0) + amount
+                toBuy: (oldItem.toBuy || 0) + amount,
+                priceInToBuy: price,
+                storeInToBuy: store
             })
         }
     },
