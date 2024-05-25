@@ -15,6 +15,8 @@ import { DialogClose } from '@radix-ui/react-dialog';
 import StoreForm, { StoreFormValues } from '#/components/forms/StoreForm';
 import useStoresStore from '#/state/storesStore';
 import { Store } from '#/types/Store';
+import { useOutletContext } from 'react-router-dom';
+import { AppLayoutContext } from '#/types/routes';
 
 export default function GroceriesListPage() {
 
@@ -23,8 +25,8 @@ export default function GroceriesListPage() {
 
     const [selectedGrocery, setSelectedGrocery] = useState<Grocery | null>(null);
     const [isGroceryFormOpen, setIsGroceryFormOpen] = useState<boolean>(false);
-    const [selectedStore, setSelectedStore] = useState<Store | null>(null);
-    const [isStoreFormOpen, setIsStoreFormOpen] = useState<boolean>(false);
+
+    const outletContext = useOutletContext<AppLayoutContext>();
 
     const onGroceryFormSubmit = (formValues: GroceryFormValues) => {
 
@@ -58,12 +60,7 @@ export default function GroceriesListPage() {
         setIsGroceryFormOpen(true);
     }
 
-    const handleStoreFormSubmit = (formValues: StoreFormValues) => {
-        stores.add({
-            ...formValues
-        });
-        setIsStoreFormOpen(false);
-    }
+    
 
     return (
         <div className='flex flex-col h-full'>
@@ -91,30 +88,11 @@ export default function GroceriesListPage() {
                             stores={stores.items}
                             onSubmit={onGroceryFormSubmit}
                             onDelete={handleGroceryDelete}
-                            onAddStoreClick={() => setIsStoreFormOpen(true)}
+                            onAddStoreClick={() => outletContext.onStoreFormDialogOpen(null)}
                         />
                     </DialogContent>
                 </Dialog>
-                {/* Store form dialog */}
-                <Dialog
-                    open={isStoreFormOpen}
-                    onOpenChange={setIsStoreFormOpen}
-                >
-                    <DialogContent>
-                        <DialogOverlay className='hidden' />
-                        <DialogHeader>
-                            <DialogClose
-                                className='h-fit w-fit ml-auto'
-                            >
-                                <X className='h-6 w-6 text-foreground' />
-                            </DialogClose>
-                        </DialogHeader>
-                        <StoreForm
-                            store={selectedStore}
-                            onSubmit={handleStoreFormSubmit}
-                        />
-                    </DialogContent>
-                </Dialog>
+                
             </div>
             {groceries.items.length ? 
                 <ul className='flex flex-col flex-grow gap-2 overflow-y-auto h-1'>

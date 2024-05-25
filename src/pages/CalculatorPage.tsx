@@ -1,14 +1,19 @@
-// State
+// Components
 import { Button } from '#/components/input/Button';
 import StoreSelect from '#/components/input/StoreSelect';
+
+// State
 import useGroceriesStore from '#/state/groceriesStore'
+import useStoresStore from '#/state/storesStore';
 
 // Types
 import { Grocery } from '#/types/Grocery';
+import { Store } from '#/types/Store';
 
 export default function CalculatorPage() {
 
     const groceries = useGroceriesStore();
+    const stores = useStoresStore();
 
     const handleGroceriesAmountChange = (grocery: Grocery, newAmount: number) => {
         groceries.update({
@@ -31,6 +36,11 @@ export default function CalculatorPage() {
         await groceries.clearCalculatorAmounts();
     }
 
+    const getStoresThatHavePricesForGrocery = (grocery: Grocery, stores: Store[]) => {
+        console.log(grocery);
+        return stores.filter((store) => (store.id in grocery.prices))
+    }
+
     return (
         <div className='flex flex-col h-full'>
             <div className='flex justify-between items-center'>
@@ -51,13 +61,17 @@ export default function CalculatorPage() {
                                     {/* <th>1</th> */}
                                     {/* <th>1</th> */}
                                 {/* </div> */}
-                                <th rowSpan={1} colSpan={3}>Prices</th>
-                                <th rowSpan={2}>Amount</th>
+                                <th rowSpan={1} colSpan={stores.items.length}>Prices</th>
+                                <th rowSpan={1} colSpan={2}>Actions</th>
                             </tr>
                             <tr>
-                                    <th>1</th>
-                                    <th>1</th>
-                                    <th>1</th>
+                                    {stores.items.map((store) => (
+                                        <th style={{backgroundColor: store.color}}>
+
+                                        </th>
+                                    ))}
+                                    <th>Store</th>
+                                    <th>Amount</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -77,36 +91,31 @@ export default function CalculatorPage() {
                                         </span>
                                     </td>
                                     
-                                    <td>
-                                        <div className='flex items-center justify-center'>
-                                            {grocery.price} &euro;
-                                        </div>
-                                        
-                                    </td>
-                                    <td>
-                                        <div className='flex items-center justify-center'>
-                                            {grocery.price} &euro;
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div className='flex items-center justify-center'>
-                                            {grocery.price} &euro;
-                                        </div>
-                                    </td>
+                                    {stores.items.map(store => {
+                                        return (
+                                            <td>
+                                                <div className='flex items-center justify-center'>
+                                                    {grocery.prices[store.id] ? grocery.prices[store.id] + ' €' : '-'}
+                                                </div>
+                                            </td>
+                                        )
+                                    })}
                                     <td>
                                         <div className='flex items-center justify-around'>
                                             <StoreSelect
-                                                stores={[]}
-                                            />
-                                            <input
-                                                className='w-16 bg-transparent border-x-0 border-t-0 border-b-2 text-background overflow-visible'
-                                                value={grocery.amountInCalculator}
-                                                type='number' 
-                                                step='1' 
-                                                onChange={(e) => handleGroceriesAmountChange(grocery, parseFloat(e.target.value))}
+                                                stores={getStoresThatHavePricesForGrocery(grocery, stores.items)}
                                             />
                                         </div>
                                         
+                                    </td>
+                                    <td>
+                                        <input
+                                            className='max-w-16 bg-transparent border-x-0 border-t-0 border-b-2 text-background overflow-visible'
+                                            value={grocery.amountInCalculator}
+                                            type='number' 
+                                            step='1' 
+                                            onChange={(e) => handleGroceriesAmountChange(grocery, parseFloat(e.target.value))}
+                                        />
                                     </td>
                                 </tr>
                             ))}

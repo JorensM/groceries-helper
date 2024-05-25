@@ -14,7 +14,7 @@ const formSchema = z.object({
     name: z.string().min(1, {
         message: "Name must be at least 1 characters."
     }),
-    prices: z.record(z.coerce.number())
+    prices: z.record(z.coerce.number().optional())
 })
 
 export type GroceryFormValues = z.infer<typeof formSchema>
