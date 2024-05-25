@@ -13,11 +13,17 @@ const routes: RouteObject[] = [
     },
     {
         path: '/calculator',
-        element: <CalculatorPage />
+        element: <CalculatorPage />,
+        handle: {
+            searchable: true
+        }
     },
     {
         path: '/groceries',
-        element: <GroceriesListPage />
+        element: <GroceriesListPage />,
+        handle: {
+            searchable: true
+        }
     },
     {
         path: '/to-buy',

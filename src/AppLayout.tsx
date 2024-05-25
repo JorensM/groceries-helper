@@ -1,7 +1,7 @@
 // Core
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useMatches, useNavigate } from 'react-router-dom';
 
 // Constants
 import { NavItem, mainNavigation } from './constants/navigation';
@@ -29,11 +29,33 @@ export default function AppLayout() {
 
     const location = useLocation();
     const navigate = useNavigate();
+    const currentRoute = useMatches().find(match => match.pathname == location.pathname)!;
+
+    //const searchableMatches = matches.filter(match => (match.handle as any).searchable);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
     const [selectedStore, setSelectedStore] = useState<Store | null>(null);
     const [isStoreFormOpen, setIsStoreFormOpen] = useState<boolean>(false);
+
+    const [searchValues, setSearchValues] = useState<{ [routePath: string]: string | undefined}>({});
+
+    const showSearch = (currentRoute.handle as { searchable: boolean } || {})?.searchable;
+    const currentPageSearchValue = showSearch ? searchValues?.[currentRoute.pathname] || "" : undefined
+
+    
+
+    const setSearchValue = (routePath: string, value: string | undefined) => {
+        setSearchValues((oldState) => {
+            const newState = {...oldState};
+            newState[routePath] = value;
+            return newState;
+        })
+    }
+
+    const setCurrentMatchSearchValue = (value: string | undefined) => {
+        setSearchValue(currentRoute?.pathname, value);
+    }
 
     const onNavItemClick = (navItem: NavItem) => {
         navigate(navItem.path);
@@ -51,10 +73,7 @@ export default function AppLayout() {
         alert(url.href);
     }
 
-    const onStoreFormDialogOpen = (store: Store | null) => {
-        setSelectedStore(store);
-        setIsStoreFormOpen(true);
-    }
+   
 
     const handleStoreFormSubmit = (formValues: StoreFormValues) => {
         if(!selectedStore) {
@@ -75,9 +94,19 @@ export default function AppLayout() {
         setIsStoreFormOpen(false);
     }
 
+    //-- Layout context --//
+    const onStoreFormDialogOpen = (store: Store | null) => {
+        setSelectedStore(store);
+        setIsStoreFormOpen(true);
+    }
+
+    const onSearch = (value: string | undefined) => {
+        setCurrentMatchSearchValue(value);
+    }
+
     return (
         <>
-            <nav className='p-2 pt-4'>
+            <nav className='flex items-center p-2 pt-4'>
                 <Drawer
                     direction='left'
                     open={isDrawerOpen} 
@@ -95,6 +124,7 @@ export default function AppLayout() {
                         {mainNavigation.map(navItem => (
                             <li key={navItem.path}>
                                 <Button
+                                    type='button'
                                     variant='ghost'
                                     className={location.pathname == navItem.path ? 'text-primary' : undefined}
                                     onClick={() => onNavItemClick(navItem)}
@@ -115,11 +145,23 @@ export default function AppLayout() {
                         </ul>
                     </DrawerContent>
                 </Drawer>
+                {showSearch ? 
+                    <div className='flex flex-grow ml-4'>
+                        <input
+                            value={currentPageSearchValue}
+                            className='bg-transparent border-gray-500 caret-white w-full rounded-full pl-4 text-white'
+                            placeholder='Search'
+                            onChange={(e) => onSearch(e.target.value)}
+                        />
+                    </div>
+                    
+                : null}
             </nav>
             <main className='px-2 flex-grow'>
                 <Outlet 
                     context={{
-                        onStoreFormDialogOpen
+                        onStoreFormDialogOpen,
+                        searchValue: currentPageSearchValue
                     }}
                 />
                 {/* Store form dialog */}

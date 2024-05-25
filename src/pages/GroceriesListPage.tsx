@@ -3,6 +3,7 @@ import { useOutletContext } from 'react-router-dom';
 import { useState } from 'react';
 import { PlusIcon, X } from 'lucide-react';
 import { DialogClose } from '@radix-ui/react-dialog';
+import clsx from 'clsx';
 
 // Components
 import { Dialog, DialogHeader } from '#/components/Dialog';
@@ -15,12 +16,12 @@ import useStoresStore from '#/state/storesStore';
 
 // Util
 import handleKeyPress from '#/util/handleKeyPress';
+import filterItemsBySearchTerm from '#/util/filterItemsBySearchTerm';
+import getStoreIDWithLowestPrice from '#/util/getStoreIDWithLowestPrice';
 
 // Types
 import { AppLayoutContext } from '#/types/routes';
 import { Grocery } from '#/types/Grocery';
-import getStoreIDWithLowestPrice from '#/util/getStoreIDWithLowestPrice';
-import clsx from 'clsx';
 
 export default function GroceriesListPage() {
 
@@ -31,6 +32,8 @@ export default function GroceriesListPage() {
     const [isGroceryFormOpen, setIsGroceryFormOpen] = useState<boolean>(false);
 
     const outletContext = useOutletContext<AppLayoutContext>();
+
+    const filteredGroceries = filterItemsBySearchTerm(groceries.items, outletContext.searchValue);
 
     const onGroceryFormSubmit = (formValues: GroceryFormValues) => {
 
@@ -125,7 +128,7 @@ export default function GroceriesListPage() {
                     </thead>
                     <tbody>
 
-                        {groceries.items.map(grocery => (
+                        {filteredGroceries.map(grocery => (
                             <tr 
                                 key={grocery.id}
                                 className='cursor-pointer hover:bg-neutral-700'
