@@ -17,11 +17,26 @@ type GroceriesStore = AbstractDataStoreSlice<Grocery> & {
     clearCalculatorAmounts: () => void
 };
 
+const convertGroceriesToNewSchema = (items: Grocery[]) => {
+    return items.map((item) => {
+        const newItem = item;
+        if(typeof newItem.prices !== 'object') {
+            newItem.prices = {}
+        }
+
+        return newItem;
+    })
+}
+
 const useGroceriesStore = create<GroceriesStore>((set, get) => ({
     ...createAbstractDataStoreSlice<Grocery>(
         [],
         db.groceries,
-        undefined,
+        (items: Grocery[]) => {
+            set({
+                items: convertGroceriesToNewSchema(items)
+            })
+        },
         set,
         get
     ),
