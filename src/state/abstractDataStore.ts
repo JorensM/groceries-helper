@@ -14,6 +14,7 @@ export type AbstractDataStoreSlice<T extends { id: ID }> = {
     setAll: (items: T[]) => Promise<boolean>
     update: (item: ItemUpdate<T>) => Promise<void>
     delete: (item: ItemUpdate<T> | ID) => Promise<void>
+    upsertMany: (items: (ItemUpdate<T> | ItemCreate<T>)[]) => Promise<boolean>
     getAll: () => Promise<T[]>
     /**
      * Initialize the store by fetching data from database
@@ -90,6 +91,17 @@ AbstractDataStoreSlice<T>
                     items: newItems
                 };
             })   
+        },
+        upsertMany: async (items: ((ItemUpdate<T> | ItemCreate<T>) & { id?: ID})[]) => {
+            const originalItems = _get().items; 
+            for(const updatedItem of items) {
+                if(updatedItem.id && originalItems.findIndex(originalItem => originalItem.id == updatedItem.id) != -1) {
+                    _get().update(updatedItem as ItemUpdate<T>);
+                } else {
+                    _get().add(updatedItem as ItemCreate<T>);
+                }
+            }
+            return true;
         },
         delete: async (item: ItemUpdate<T> | ID) => {
             await dbCollection.delete(item);

@@ -1,7 +1,7 @@
-import { Grocery } from '#/types/Grocery';
+import { ImportData } from '#/types/misc';
 import { SharedFormat } from './getGroceriesLink';
 
-const getGroceriesFromLink = async (link: URL | string): Promise<Grocery[]> => {
+const getDataFromLink = async (link: URL | string): Promise<ImportData> => {
     const url = new URL(link);
 
     const sharedFormat: SharedFormat = url.searchParams.get('shared-format') as SharedFormat;
@@ -12,13 +12,13 @@ const getGroceriesFromLink = async (link: URL | string): Promise<Grocery[]> => {
     }
 
     if(sharedFormat == 'jsonblob') {
-        return await getGroceriesFromJSONBlob(sharedCode);
+        return await getDataFromJSONBlob(sharedCode);
     }
 
     throw new Error('Incorrect link for sharing');
 }
 
-const getGroceriesFromJSONBlob = async (code: string): Promise<Grocery[]> => {
+const getDataFromJSONBlob = async (code: string): Promise<ImportData> => {
     const res = await fetch('https://jsonblob.com/api/jsonBlob/' + code);
 
     if(!res.ok) {
@@ -30,4 +30,4 @@ const getGroceriesFromJSONBlob = async (code: string): Promise<Grocery[]> => {
     return data;
 }
 
-export default getGroceriesFromLink;
+export default getDataFromLink;

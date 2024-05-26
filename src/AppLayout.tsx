@@ -22,19 +22,28 @@ import getGroceriesLink from './util/getGroceriesLink';
 // Types
 import { Store } from './types/Store';
 import clsx from 'clsx';
+import exportData from './util/exportData';
+import importData from './util/importData';
+import useImport from './pages/useImport';
 
 export default function AppLayout() {
 
+    //-- State --//
     const getGroceries = useGroceriesStore((state) => state.getAll);
     const stores = useStoresStore();
 
+    //-- Hooks --//
     const location = useLocation();
     const navigate = useNavigate();
+    const _importData = useImport();
+    
     const currentRoute = useMatches().find(match => match.pathname == location.pathname)!;
-
     //const searchableMatches = matches.filter(match => (match.handle as any).searchable);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+    const [isShareDialogOpen, setIsShareDialogOpen] = useState<boolean>(false);
+
+    const [importInputValue, setImportInputValue] = useState<string>('');
 
     const [selectedStore, setSelectedStore] = useState<Store | null>(null);
     const [isStoreFormOpen, setIsStoreFormOpen] = useState<boolean>(false);
@@ -63,6 +72,8 @@ export default function AppLayout() {
         setIsDrawerOpen(false);
     }
 
+    //-- Share dialog --//
+
     const onShareLinkClick = async () => {
         const allGroceries = await getGroceries();
         if(!allGroceries.length) {
@@ -71,12 +82,29 @@ export default function AppLayout() {
         }
         if(!confirm(
             'Notice: your list data will be stored in a publicly available storage.' +
-            'It would still be mostly inaccessible since one would need to know the unique code associated' +
+            'It would still be mostly inaccessible since one would need to know the unique code associated ' +
             'with your list. Do you wish to proceed?')) return;
 
-        const url = await getGroceriesLink(allGroceries);
+        const url = await getGroceriesLink(allGroceries, stores.items);
         navigator.clipboard.writeText(url.href);
         alert('Link to your list copied to clipboard!');
+    }
+
+    const onExportClick = async () => {
+        const groceryItems = await getGroceries();
+        exportData(groceryItems, stores.items);
+    }
+
+    const onImport = async (file?: File) => {
+        if(!file) throw new Error('No file specified')
+        try {
+            const data = await importData(file);
+            const success = _importData(data.groceries, data.stores);
+            if(success) alert('Data has been imported')
+        } catch (e: any) {
+            alert('An error occured: ' + e.message)
+        }
+        setImportInputValue('');
     }
 
    
@@ -143,7 +171,7 @@ export default function AppLayout() {
                                 <Button
                                     variant='ghost'
                                     className='hover:bg-background hover:text-foreground w-full !justify-start'
-                                    onClick={() => onShareLinkClick()}
+                                    onClick={() => setIsShareDialogOpen(true)}
                                 >
                                     Share list
                                 </Button>
@@ -176,6 +204,53 @@ export default function AppLayout() {
                     </div>
                     
                 : null}
+                <Dialog
+                    open={isShareDialogOpen}
+                    onOpenChange={setIsShareDialogOpen}
+                >
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogClose className='ml-auto'>
+                                <X className='h-6 w-6 text-foreground' />
+                            </DialogClose>
+                        </DialogHeader>
+                        <ul className='flex flex-col gap-2'>
+                            <li>
+                                <Button
+                                    variant='outline'
+                                    onBg='white'
+                                    onClick={() => onShareLinkClick()}
+                                >
+                                    Share link
+                                </Button>
+                            </li>
+                            <li>
+                                <Button
+                                    variant='outline'
+                                    onBg='white'
+                                    onClick={() => onExportClick()}
+                                >
+                                    Export
+                                </Button>
+                            </li>
+                            <li className='flex flex-col gap-1'>
+                                <label 
+                                    htmlFor='import'
+                                    className='text-foreground font-medium text-sm'
+                                >Import</label>
+                                <input
+                                    id='import'
+                                    type='file'
+                                    value={importInputValue}
+                                    onChange={(e) => onImport(e.target.files?.[0])}
+                                    // variant='outline'
+                                    // onBg='white'
+                                    // onClick={() => onImportClick()}
+                                />
+                            </li>
+                        </ul>
+                    </DialogContent>
+                </Dialog>
             </nav>
             <main className='px-2 flex-grow'>
                 <Outlet 
