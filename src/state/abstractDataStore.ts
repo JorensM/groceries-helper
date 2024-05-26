@@ -94,11 +94,13 @@ AbstractDataStoreSlice<T>
         },
         upsertMany: async (items: ((ItemUpdate<T> | ItemCreate<T>) & { id?: ID})[]) => {
             const originalItems = _get().items; 
+            console.log(originalItems);
             for(const updatedItem of items) {
                 if(updatedItem.id && originalItems.findIndex(originalItem => originalItem.id == updatedItem.id) != -1) {
-                    _get().update(updatedItem as ItemUpdate<T>);
+                    await _get().update(updatedItem as ItemUpdate<T>);
                 } else {
-                    _get().add(updatedItem as ItemCreate<T>);
+                    console.log(updatedItem);
+                    await _get().add(updatedItem as ItemCreate<T>);
                 }
             }
             return true;
