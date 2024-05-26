@@ -5,6 +5,7 @@ import GroceriesListPage from './pages/GroceriesListPage';
 import ToBuyPage from './pages/ToBuyPage';
 import HomePage from './pages/HomePage';
 import StoresPage from './pages/StoresPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 
 const routes: RouteObject[] = [
     {
@@ -32,6 +33,10 @@ const routes: RouteObject[] = [
     {
         path: '/stores',
         element: <StoresPage />
+    },
+    {
+        path: '/privacy-policy',
+        element: <PrivacyPolicyPage />
     }
 ]
 

@@ -4,7 +4,7 @@ import { Menu, X } from 'lucide-react';
 import { Outlet, useLocation, useMatches, useNavigate } from 'react-router-dom';
 
 // Constants
-import { NavItem, mainNavigation } from './constants/navigation';
+import { NavItem, mainNavigation, mainSecondaryNavigation } from './constants/navigation';
 
 // Components
 import { Drawer, DrawerContent, DrawerTrigger } from './components/Drawer';
@@ -21,6 +21,7 @@ import getGroceriesLink from './util/getGroceriesLink';
 
 // Types
 import { Store } from './types/Store';
+import clsx from 'clsx';
 
 export default function AppLayout() {
 
@@ -68,9 +69,14 @@ export default function AppLayout() {
             alert('Please add some groceries before sharing a link');
             return;
         }
+        if(!confirm(
+            'Notice: your list data will be stored in a publicly available storage.' +
+            'It would still be mostly inaccessible since one would need to know the unique code associated' +
+            'with your list. Do you wish to proceed?')) return;
+
         const url = await getGroceriesLink(allGroceries);
         navigator.clipboard.writeText(url.href);
-        alert(url.href);
+        alert('Link to your list copied to clipboard!');
     }
 
    
@@ -121,27 +127,41 @@ export default function AppLayout() {
                         className='flex flex-col rounded-r-[10px] h-full w-[200px] mt-24 fixed bottom-0 left-0'
                     >
                         <ul>
-                        {mainNavigation.map(navItem => (
-                            <li key={navItem.path}>
+                            {mainNavigation.map(navItem => (
+                                <li key={navItem.path}>
+                                    <Button
+                                        type='button'
+                                        variant='ghost'
+                                        className={clsx('w-full !justify-start', location.pathname == navItem.path ? 'text-primary' : undefined)}
+                                        onClick={() => onNavItemClick(navItem)}
+                                    >
+                                        {navItem.label}
+                                    </Button>
+                                </li>
+                            ))}
+                            <li key='share'>
                                 <Button
-                                    type='button'
                                     variant='ghost'
-                                    className={location.pathname == navItem.path ? 'text-primary' : undefined}
-                                    onClick={() => onNavItemClick(navItem)}
-                                >
-                                    {navItem.label}
-                                </Button>
-                            </li>
-                        ))}
-                        <li key='share'>
-                                <Button
-                                    variant='ghost'
-                                    className='hover:bg-background'
+                                    className='hover:bg-background hover:text-foreground w-full !justify-start'
                                     onClick={() => onShareLinkClick()}
                                 >
                                     Share list
                                 </Button>
                             </li>
+                        </ul>
+                        <ul className='mt-auto'>
+                            {mainSecondaryNavigation.map(navItem => (
+                                <li key={navItem.path}>
+                                    <Button
+                                        type='button'
+                                        variant='ghost'
+                                        className={clsx('w-full !justify-start', location.pathname == navItem.path ? 'text-primary' : undefined)}
+                                        onClick={() => onNavItemClick(navItem)}
+                                    >
+                                        {navItem.label}
+                                    </Button>
+                                </li>
+                            ))}
                         </ul>
                     </DrawerContent>
                 </Drawer>
