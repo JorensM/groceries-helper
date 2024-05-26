@@ -1,17 +1,22 @@
 // Constants
 import { Grocery } from '#/types/Grocery';
+import { Store } from '#/types/Store';
 
 export type SharedFormat = 'jsonblob'
 
 console.log('APP URL: ', APP_URL);
 
-async function getGroceriesLinkJSONBlob(groceries: Grocery[]): Promise<URL> {
+async function getGroceriesLinkJSONBlob(groceries: Grocery[], stores: Store[]): Promise<URL> {
+    const data = {
+        groceries,
+        stores
+    }
     const res = await fetch('https://jsonblob.com/api/jsonBlob', {
         method: 'POST',
         headers: {
             'content-type': 'application/json'
         },
-        body: JSON.stringify(groceries)
+        body: JSON.stringify(data)
     })
 
     if(!res.ok) {

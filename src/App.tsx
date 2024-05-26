@@ -5,7 +5,7 @@ import { RouterProvider } from 'react-router-dom';
 import router from './router'
 import useGroceriesStore from './state/groceriesStore';
 import { useEffect } from 'react';
-import getGroceriesFromLink from './util/getGroceriesFromLink';
+import getDataFromLink from './util/getDataFromLink';
 import useStoresStore from './state/storesStore';
 
 function App() {
@@ -26,8 +26,9 @@ function App() {
     await groceries.init();
     if(isURLShareable(location.href)) {
       console.log('url is shareable')
-      const sharedGroceries = await getGroceriesFromLink(location.href);
-      groceries.setAll(sharedGroceries);
+      const sharedData = await getDataFromLink(location.href);
+      groceries.upsertMany(sharedData.groceries);
+      stores.upsertMany(sharedData.stores);
     }
   }
 
