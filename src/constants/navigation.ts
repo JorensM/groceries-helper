@@ -25,3 +25,10 @@ export const mainNavigation: NavItem[] = [
         path: '/stores'
     }
 ]
+
+export const mainSecondaryNavigation: NavItem[] = [
+    {
+        label: 'Privacy policy',
+        path: '/privacy-policy'
+    }
+]

@@ -62,3 +62,7 @@ th {
 tr:nth-child(odd) {
   background-color: rgb(54, 54, 54);
 }
+
+a {
+  text-decoration: underline;
+}
