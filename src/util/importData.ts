@@ -4,7 +4,7 @@ import { Store } from '#/types/Store';
 
 export default function importData(file: File): Promise<{ groceries: Grocery[], stores: Store[]}> {
     if(!file.type.includes('json')) throw new Error('File must be a .json file')
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const reader = new FileReader();
 
         reader.onload = (e) => {
