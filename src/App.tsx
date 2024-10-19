@@ -1,5 +1,6 @@
 // Core
 import { RouterProvider } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 
 // Util
 import router from './router'
@@ -38,9 +39,13 @@ function App() {
   }, [])
 
   return (
-    <RouterProvider 
-      router={router}
-    />
+    <>
+      <Analytics/>
+      <RouterProvider 
+        router={router}
+      />
+    </>
+    
   )
 }
 
