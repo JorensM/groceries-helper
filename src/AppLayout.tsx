@@ -68,7 +68,13 @@ export default function AppLayout() {
     }
 
     const onNavItemClick = (navItem: NavItem) => {
-        navigate(navItem.path);
+        if(navItem.path) {
+            navigate(navItem.path);
+        } else if(navItem.href) {
+            window.open(navItem.href, '_blank');
+        } else {
+            throw new Error('No link specified for navigation item');
+        }
         setIsDrawerOpen(false);
     }
 
@@ -177,6 +183,7 @@ export default function AppLayout() {
                                 </Button>
                             </li>
                         </ul>
+                        {/* Bottom navigation */}
                         <ul className='mt-auto'>
                             {mainSecondaryNavigation.map(navItem => (
                                 <li key={navItem.path}>

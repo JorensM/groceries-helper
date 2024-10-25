@@ -1,6 +1,7 @@
 export type NavItem = {
     label: string,
-    path: string
+    path?: string,
+    href?: string
 }
 
 export const mainNavigation: NavItem[] = [
@@ -27,6 +28,10 @@ export const mainNavigation: NavItem[] = [
 ]
 
 export const mainSecondaryNavigation: NavItem[] = [
+    {
+        label: 'Send feedback',
+        href: 'mailto:jorensmerenjanu@gmail.com'
+    },
     {
         label: 'Privacy policy',
         path: '/privacy-policy'
