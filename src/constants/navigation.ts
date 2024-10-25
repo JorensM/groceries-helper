@@ -1,6 +1,7 @@
 export type NavItem = {
     label: string,
-    path: string
+    path?: string,
+    href?: string
 }
 
 export const mainNavigation: NavItem[] = [
